@@ -1,7 +1,7 @@
 name-template: 'v$NEXT_PATCH_VERSION'
 tag-template: 'v$NEXT_PATCH_VERSION'
 categories:
-  - title: '🚀Features'
+  - title: '🚀 Features'
     labels:
       - 'feature'
       - 'enhancement'
@@ -16,6 +16,7 @@ change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 template: |
   ## Changes
   $CHANGES
+
   Thanks to our contributions from $CONTRIBUTORS.
   Testing out overriding template locally.
   $TEST_VAR
