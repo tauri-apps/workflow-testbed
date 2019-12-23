@@ -16,5 +16,6 @@ A rose by any other name would smell as sweet.
 to
 
 ```
-A rose by any other name would smell as sweet, but everyone needs to know that the other name is the right name.
+A rose by any other name would smell as sweet, 
+but everyone needs to know that the other name is the right name.
 ```
