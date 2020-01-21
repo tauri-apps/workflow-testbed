@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.commit.message, "Publish")
     steps:
-      - uses: actions/checkout v2
+      - uses: actions/checkout@v2
       - run: git checkout master
       - run: git merge dev
       - run: git push
