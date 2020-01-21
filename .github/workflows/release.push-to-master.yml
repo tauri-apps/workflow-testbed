@@ -1,0 +1,16 @@
+name: release
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: contains(github.commit.message, "Publish")
+    steps:
+      - uses: actions/checkout v2
+      - run: git checkout master
+      - run: git merge dev
+      - run: git push
