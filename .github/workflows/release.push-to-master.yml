@@ -8,7 +8,7 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: contains(github.commit.message, "Publish")
+    if: contains(github.commit.message, 'Publish')
     steps:
       - uses: actions/checkout@v2
       - run: git checkout master
