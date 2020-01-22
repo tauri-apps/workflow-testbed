@@ -44,7 +44,6 @@ jobs:
           git config --global user.email github-actions[bot]@users.noreply.github.com
       - run: git fetch origin master
       - run: git branch -f master dev
-      - run: git push
       - run: git checkout master
       - run: git merge --squash ${{ github.sha }}
-      - run: git push
+      - run: git push --set-upstream origin master
