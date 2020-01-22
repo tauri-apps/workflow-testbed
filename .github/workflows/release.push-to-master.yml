@@ -44,5 +44,5 @@ jobs:
           git config --global user.email github-actions[bot]@users.noreply.github.com
       - run: git fetch origin master
       - run: git checkout master
-      - run: git merge --squash ${{ github.sha }} --allow-unrelated-histories
+      - run: git merge --squash ${{ github.sha }} -s theirs --allow-unrelated-histories
       - run: git push
