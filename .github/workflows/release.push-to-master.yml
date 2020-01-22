@@ -38,6 +38,10 @@ jobs:
     if: contains(github.event.head_commit.message, 'Publish')
     steps:
       - uses: actions/checkout@v2
+      - name: git config
+        run: |
+          git config --global user.name github-actions[bot]
+          git config --global user.email github-actions[bot]@users.noreply.github.com
       - run: git fetch origin master
       - run: git checkout master
       - run: git merge --squash ${{ github.sha }} --allow-unrelated-histories
