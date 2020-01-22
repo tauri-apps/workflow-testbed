@@ -43,5 +43,5 @@ jobs:
           git config --global user.name github-actions[bot]
           git config --global user.email github-actions[bot]@users.noreply.github.com
       - run: git fetch origin master
-      - run: git merge --squash ${{ github.sha }} -m ${{ github.event.head_commit.message }}
+      - run: git merge --squash ${{ github.sha }} -m "${{ github.event.head_commit.message }}"
       - run: git push
