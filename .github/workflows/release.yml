@@ -57,8 +57,11 @@ jobs:
         with:
           ref: master
       - run: git status
-      - name: Login to NPM
-        run: echo "npm login" # npm login ${{ secrets.npm_token }}
+      - name: npm pack
+        run: |
+          cd cli/tauri.js
+          npm pack
+      - run: ls
       - name: Publish package
         run: |
           cd cli/tauri.js
