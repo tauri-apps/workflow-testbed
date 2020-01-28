@@ -62,7 +62,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: git status
       - name: get version
-        run: PACKAGE_VERSION=$(node -p "require('./package.json').version")
+        run: echo ::set-env name=PACKAGE_VERSION::$(node -p "require('./package.json').version")
       - name: npm pack
         run: |
           cd cli/tauri.js
