@@ -62,16 +62,16 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: git status
       - name: get version
+        working-directory: cli/tauri.js
         run: echo ::set-env name=PACKAGE_VERSION::$(node -p "require('./package.json').version")
       - name: npm pack
-        run: |
-          cd cli/tauri.js
-          npm pack
+        working-directory: cli/tauri.js
+        run: npm pack
       - name: Publish package
+        working-directory: cli/tauri.js
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          cd cli/tauri.js
           echo "We will publish this directory."
           ls # npm publish
           echo $PACKAGE_VERSION
@@ -92,12 +92,13 @@ jobs:
       - name: Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1.0.1
+        working-directory: cli/tauri.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./cli/tauri.js/tauri-$PACKAGE_VERSION.tgz
-          asset_name: tauri-$PACKAGE_VERSION.tgz
+          asset_path: ./tauri-${{ env.PACKAGE_VERSION }}.tgz
+          asset_name: tauri-${{ env.PACKAGE_VERSION }}.tgz
           asset_content_type: application/tgx
 
   publish-cargo:
