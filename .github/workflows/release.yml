@@ -70,7 +70,6 @@ jobs:
       - name: Publish package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          PACKAGE_VERSION: ${{ PACKAGE_VERSION }}
         run: |
           cd cli/tauri.js
           echo "We will publish this directory."
@@ -95,11 +94,10 @@ jobs:
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PACKAGE_VERSION: ${{ PACKAGE_VERSION }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./cli/tauri.js/tauri-${{ PACKAGE_VERSION }}.tgz
-          asset_name: tauri-${{ PACKAGE_VERSION }}.tgz
+          asset_path: ./cli/tauri.js/tauri-$PACKAGE_VERSION.tgz
+          asset_name: tauri-$PACKAGE_VERSION.tgz
           asset_content_type: application/tgx
 
   publish-cargo:
