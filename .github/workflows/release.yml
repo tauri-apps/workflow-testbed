@@ -97,6 +97,15 @@ jobs:
           upload_url: ${{ steps.create_npm_release.outputs.upload_url }} 
           asset_path: ./cli/tauri.js/tauri-${{ env.PACKAGE_VERSION }}.tgz
           asset_name: tauri-${{ env.PACKAGE_VERSION }}.tgz
+      - name: Tangle Release
+        id: tangle_release
+        uses: iotaledger/gh-tangle-release@v0.5.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IOTA_SEED: ${{ secrets.IOTA_SEED }}
+        with:
+          tag_name: tauri.js-v${{ env.PACKAGE_VERSION }}
+          comment: "[Test] Release tauri.js v${{ env.PACKAGE_VERSION }}"
 
   publish-cargo:
     runs-on: ubuntu-latest
