@@ -96,6 +96,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_npm_release.outputs.upload_url }} 
           asset_path: ./cli/tauri.js/tauri-${{ env.PACKAGE_VERSION }}.tgz
+          asset_name: tauri-${{ env.PACKAGE_VERSION }}.tgz
 
   publish-cargo:
     runs-on: ubuntu-latest
