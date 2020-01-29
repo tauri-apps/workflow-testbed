@@ -97,6 +97,7 @@ jobs:
           upload_url: ${{ steps.create_npm_release.outputs.upload_url }} 
           asset_path: ./cli/tauri.js/tauri-${{ env.PACKAGE_VERSION }}.tgz
           asset_name: tauri-${{ env.PACKAGE_VERSION }}.tgz
+          asset_content_type: application/x-gtar
       - name: Tangle Release
         id: tangle_release
         uses: iotaledger/gh-tangle-release@v0.5.2
