@@ -75,15 +75,27 @@ jobs:
           ls # npm publish
           echo $PACKAGE_VERSION
       - name: Create Release
-        uses: sondreb/action-release@master
+        id: create_npm_release
+        uses: actions/create-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: "./cli/tauri.js/tauri-${{ env.PACKAGE_VERSION }}.tgz"
-          draft: true
+          tag_name: tauri.js-v${{ env.PACKAGE_VERSION }}
+          release_name: "Release tauri.js v${{ env.PACKAGE_VERSION }}"
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
           prerelease: false
-          body: 'This is a release'
-          name: "Release tauri.js v${{ env.PACKAGE_VERSION }}"
-          tag: tauri.js-v${{ env.PACKAGE_VERSION }}
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_npm_release.outputs.upload_url }} 
+          asset_path: ./cli/tauri.js/tauri-${{ env.PACKAGE_VERSION }}.tgz
 
   publish-cargo:
     runs-on: ubuntu-latest
