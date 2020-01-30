@@ -34,7 +34,7 @@ jobs:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
 
-  release:
+  release-to-master:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'Publish')
     steps:
@@ -49,7 +49,7 @@ jobs:
       - run: git commit -m "${{ github.event.head_commit.message }}"
       - run: git push
 
-  publish-npm:
+  publish-npm-taurijs:
     runs-on: ubuntu-latest
     needs: release
     steps:
@@ -66,7 +66,7 @@ jobs:
       - name: npm pack
         working-directory: cli/tauri.js
         run: npm pack
-      - name: Publish package
+      - name: Publish tauri.js
         working-directory: cli/tauri.js
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -78,7 +78,7 @@ jobs:
         id: create_npm_release
         uses: actions/create-release@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: tauri.js-v${{ env.PACKAGE_VERSION }}
           release_name: "Release tauri.js v${{ env.PACKAGE_VERSION }}"
@@ -108,23 +108,40 @@ jobs:
           tag_name: tauri.js-v${{ env.PACKAGE_VERSION }}
           comment: "[Test] Release tauri.js v${{ env.PACKAGE_VERSION }}"
 
-  publish-cargo:
+  publish-cargo-tauri-bundler:
     runs-on: ubuntu-latest
     needs: release
     steps:
       - uses: actions/checkout@v2
         with:
           ref: master
-      - run: git status
       - name: Login to Crates.IO
         run: echo "cargo login" # cargo login ${{ secrets.crate_token }}
-      - name: Publish CLI
+      - name: get version
+        working-directory: cli/tauri-cli
+        run: echo ::set-env name=PACKAGE_VERSION::$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' cargo.toml)
+      - name: Publish tauri-bundler
+        working-directory: cli/tauri-cli
         run: |
-          cd cli/tauri-cli
           echo "We will publish this directory."
           ls # cargo publish
-      - name: Publish TAURI
+          echo $PACKAGE_VERSION
+
+  publish-cargo-tauri-core:
+    runs-on: ubuntu-latest
+    needs: release
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: Login to Crates.IO
+        run: echo "cargo login" # cargo login ${{ secrets.crate_token }}
+      - name: get version
+        working-directory: tauri
+        run: echo ::set-env name=PACKAGE_VERSION::$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' cargo.toml)
+      - name: Publish tauri core
+        working-directory: tauri
         run: |
-          cd tauri
           echo "We will publish this directory."
           ls # TAURI_DIST_DIR=../../test/fixture/dist cargo publish
+          echo $PACKAGE_VERSION
