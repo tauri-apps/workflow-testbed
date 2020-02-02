@@ -133,10 +133,12 @@ jobs:
         package:
           - name: tauri-bundler
             registryName: tauri-cli
-            path: cli/tauri-cli/target/package/
+            path: cli/tauri-cli
+            publishPath: /target/package
           - name: tauri-core
             registryName: tauri
-            path: tauri/target/package/
+            path: tauri
+            publishPath: /target/package
 
     steps:
       - uses: actions/checkout@v2
@@ -185,7 +187,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_crate_release.outputs.upload_url }} 
-          asset_path: ./${{ matrix.package.path }}/${{ matrix.package.registryName }}-${{ env.PACKAGE_VERSION }}.tgz
+          asset_path: ./${{ matrix.package.path }}${{ matrix.package.path }}$/{{ matrix.package.registryName }}-${{ env.PACKAGE_VERSION }}.tgz
           asset_name: ${{ matrix.package.registryName }}-${{ env.PACKAGE_VERSION }}.tgz
           asset_content_type: application/x-gtar
       - name: Tangle Release
