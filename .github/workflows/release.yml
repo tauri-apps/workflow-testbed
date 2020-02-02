@@ -75,6 +75,7 @@ jobs:
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         run: |
+          ls
           npm pack
           echo "We will publish:" $PACKAGE_VERSION
           echo "This is current latest:" $PUBLISHED_VERSION
@@ -83,10 +84,7 @@ jobs:
         working-directory: ${{ matrix.package.path }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "We will publish this directory."
-          ls
-          npm publish --dry-run
+        run: npm publish --dry-run
       - name: Create Release
         id: create_npm_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
@@ -149,16 +147,14 @@ jobs:
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         run: |
+          ls
           cargo package
           echo "We will publish:" $PACKAGE_VERSION
           echo "This is current latest:" $PUBLISHED_VERSION
       - name: Publish ${{ matrix.package.name }}
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
-        run: |
-          echo "We will publish this directory."
-          ls
-          cargo publish --dry-run
+        run: cargo publish --dry-run
       - name: Create Release
         id: create_crate_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
