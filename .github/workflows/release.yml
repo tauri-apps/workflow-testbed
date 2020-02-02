@@ -160,6 +160,8 @@ jobs:
           echo "We will publish:" $PACKAGE_VERSION
           echo "This is current latest:" $PUBLISHED_VERSION
           ls
+          cd ${{ matrix.publishPath }}
+          ls
       - name: Publish ${{ matrix.package.name }}
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
@@ -187,7 +189,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_crate_release.outputs.upload_url }} 
-          asset_path: ./${{ matrix.package.path }}${{ matrix.package.path }}$/{{ matrix.package.registryName }}-${{ env.PACKAGE_VERSION }}.tgz
+          asset_path: ./${{ matrix.package.path }}${{ matrix.package.publishPath }}/${{ matrix.package.registryName }}-${{ env.PACKAGE_VERSION }}.tgz
           asset_name: ${{ matrix.package.registryName }}-${{ env.PACKAGE_VERSION }}.tgz
           asset_content_type: application/x-gtar
       - name: Tangle Release
