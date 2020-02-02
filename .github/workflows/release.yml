@@ -72,11 +72,11 @@ jobs:
       - name: check published version
         run: echo ::set-env name=PUBLISHED_VERSION::$(npm view ${{ matrix.package.registryName }} version)
       - name: npm pack
-        if: env.PACKAGE_VERSION !== env.PUBLISHED_VERSION
+        if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         run: npm pack
       - name: Publish ${{ matrix.package.name }}
-        if: env.PACKAGE_VERSION !== env.PUBLISHED_VERSION
+        if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -87,7 +87,7 @@ jobs:
           echo $PUBLISHED_VERSION
       - name: Create Release
         id: create_npm_release
-        if: env.PACKAGE_VERSION !== env.PUBLISHED_VERSION
+        if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         uses: actions/create-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -102,7 +102,7 @@ jobs:
           prerelease: false
       - name: Upload Release Asset
         id: upload-release-asset 
-        if: env.PACKAGE_VERSION !== env.PUBLISHED_VERSION
+        if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -113,7 +113,7 @@ jobs:
           asset_content_type: application/x-gtar
       - name: Tangle Release
         id: tangle_release
-        if: env.PACKAGE_VERSION !== env.PUBLISHED_VERSION
+        if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         uses: iotaledger/gh-tangle-release@v0.5.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -146,7 +146,7 @@ jobs:
         working-directory: ${{ matrix.package.path }}
         run: echo ::set-env name=PACKAGE_VERSION::$(sed -nE 's/^\s*version = "(.*?)"/\1/p' cargo.toml)
       - name: Publish ${{ matrix.package.name }}
-        if: env.PACKAGE_VERSION !== env.PUBLISHED_VERSION
+        if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         run: |
           echo "We will publish this directory."
@@ -154,7 +154,7 @@ jobs:
           echo $PACKAGE_VERSION
       - name: Create Release
         id: create_crate_release
-        if: env.PACKAGE_VERSION !== env.PUBLISHED_VERSION
+        if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         uses: actions/create-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -169,7 +169,7 @@ jobs:
           prerelease: false
 #      - name: Upload Release Asset
 #        id: upload-release-asset 
-#        if: env.PACKAGE_VERSION !== env.PUBLISHED_VERSION
+#        if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
 #        uses: actions/upload-release-asset@v1.0.1
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -180,7 +180,7 @@ jobs:
 #          asset_content_type: application/x-gtar
       - name: Tangle Release
         id: tangle_release
-        if: env.PACKAGE_VERSION !== env.PUBLISHED_VERSION
+        if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         uses: iotaledger/gh-tangle-release@v0.5.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
