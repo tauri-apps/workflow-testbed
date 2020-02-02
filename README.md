@@ -40,4 +40,4 @@ now nowthing
 test again
 hopefully just cargo publishes
 
-oh filenames...
+oh filenames... try publish now, with complete rename
