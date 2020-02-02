@@ -76,10 +76,13 @@ jobs:
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         run: |
+          echo "pack dir:"
           ls
           npm pack
           echo "We will publish:" $PACKAGE_VERSION
           echo "This is current latest:" $PUBLISHED_VERSION
+          echo "post pack dir:"
+          ls
       - name: Publish ${{ matrix.package.name }}
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
@@ -156,10 +159,12 @@ jobs:
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         run: |
+          echo "package dir:"
+          ls
           cargo package
           echo "We will publish:" $PACKAGE_VERSION
           echo "This is current latest:" $PUBLISHED_VERSION
-          ls
+          echo "post package dir:"
           cd ${{ matrix.publishPath }}
           ls
       - name: Publish ${{ matrix.package.name }}
@@ -189,8 +194,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_crate_release.outputs.upload_url }} 
-          asset_path: ./${{ matrix.package.path }}${{ matrix.package.publishPath }}/${{ matrix.package.registryName }}-${{ env.PACKAGE_VERSION }}.tgz
-          asset_name: ${{ matrix.package.registryName }}-${{ env.PACKAGE_VERSION }}.tgz
+          asset_path: ./${{ matrix.package.path }}${{ matrix.package.publishPath }}/${{ matrix.package.registryName }}-${{ env.PACKAGE_VERSION }}.crate
+          asset_name: ${{ matrix.package.registryName }}-${{ env.PACKAGE_VERSION }}.crate
           asset_content_type: application/x-gtar
       - name: Tangle Release
         id: tangle_release
