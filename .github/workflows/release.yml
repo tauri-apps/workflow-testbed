@@ -133,10 +133,10 @@ jobs:
         package:
           - name: tauri-bundler
             registryName: tauri-cli
-            path: cli/tauri-cli
+            path: cli/tauri-cli/target/package/
           - name: tauri-core
             registryName: tauri
-            path: tauri
+            path: tauri/target/package/
 
     steps:
       - uses: actions/checkout@v2
