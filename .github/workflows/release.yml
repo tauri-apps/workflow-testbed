@@ -69,6 +69,8 @@ jobs:
       - name: get version
         working-directory: ${{ matrix.package.path }}
         run: echo ::set-env name=PACKAGE_VERSION::$(node -p "require('./package.json').version")
+      - name: check published version
+        run: echo ::set-env name=PUBLISHED_VERSION::$(npm view ${{ matrix.package.registryName }} version)
       - name: npm pack
         working-directory: ${{ matrix.package.path }}
         run: npm pack
@@ -80,6 +82,7 @@ jobs:
           echo "We will publish this directory."
           ls # npm publish
           echo $PACKAGE_VERSION
+          echo $PUBLISHED_VERSION
       - name: Create Release
         id: create_npm_release
         uses: actions/create-release@master
