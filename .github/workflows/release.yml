@@ -74,7 +74,10 @@ jobs:
       - name: npm pack
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
-        run: npm pack
+        run: |
+          npm pack
+          echo "We will publish:" $PACKAGE_VERSION
+          echo "This is current latest:" $PUBLISHED_VERSION
       - name: Publish ${{ matrix.package.name }}
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
@@ -82,9 +85,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           echo "We will publish this directory."
-          ls # npm publish
-          echo $PACKAGE_VERSION
-          echo $PUBLISHED_VERSION
+          ls
+          npm publish --dry-run
       - name: Create Release
         id: create_npm_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
@@ -140,18 +142,23 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: master
-      - name: Login to Crates.IO
-        run: echo "cargo login" # cargo login ${{ secrets.crate_token }}
       - name: get version
         working-directory: ${{ matrix.package.path }}
         run: echo ::set-env name=PACKAGE_VERSION::$(sed -nE 's/^\s*version = "(.*?)"/\1/p' cargo.toml)
+      - name: cargo package
+        if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
+        working-directory: ${{ matrix.package.path }}
+        run: |
+          cargo package
+          echo "We will publish:" $PACKAGE_VERSION
+          echo "This is current latest:" $PUBLISHED_VERSION
       - name: Publish ${{ matrix.package.name }}
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         run: |
           echo "We will publish this directory."
-          ls # cargo publish ||OR|| TAURI_DIST_DIR=../../test/fixture/dist cargo publish
-          echo $PACKAGE_VERSION
+          ls
+          cargo publish --dry-run
       - name: Create Release
         id: create_crate_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
