@@ -46,7 +46,7 @@ jobs:
       - run: git fetch origin master
       - run: git checkout master
       - run: git merge --squash ${{ github.sha }} -s recursive -X theirs --allow-unrelated-histories
-      - run: git commit -m "${{ github.event.head_commit.message }}"
+      - run: git commit -m "${{ github.event.head_commit.message }}" -s
       - run: git push
 
   publish-npm:
