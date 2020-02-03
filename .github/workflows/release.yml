@@ -84,13 +84,16 @@ jobs:
           echo "This is current latest:" $PUBLISHED_VERSION
           echo "post pack dir:"
           ls
-      - run: npm audit | tee -a notes.md
+      - name: npm audit
+        working-directory: ${{ matrix.package.path }}
+        run: npm audit | tee -a notes.md
       - name: Publish ${{ matrix.package.name }}
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --dry-run | tee -a notes.md
+      - run: echo ::set-env name=RELEASE_BODY::$(printf '%b\n' "$(cat notes.md)")
       - name: Create Release
         id: create_npm_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
@@ -100,7 +103,7 @@ jobs:
         with:
           tag_name: ${{ matrix.package.name }}-v${{ env.PACKAGE_VERSION }}
           release_name: "Release ${{ matrix.package.name }} v${{ env.PACKAGE_VERSION }} [npmjs.com]"
-          body: printf '%b\n' "$(cat notes.md)"
+          body: ${{ env.RELEASE_BODY }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
@@ -166,7 +169,8 @@ jobs:
           echo "post package dir:"
           cd ${{ matrix.publishPath }}
           ls
-      - name: cargo audit | tee -a notes.md
+      - name: cargo audit
+        working-directory: ${{ matrix.package.path }}
         run: |
           cargo install cargo-audit
           cargo audit | tee -a notes.md
@@ -174,6 +178,7 @@ jobs:
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         run: cargo publish --dry-run | tee -a notes.md
+      - run: echo ::set-env name=RELEASE_BODY::$(printf '%b\n' "$(cat notes.md)")
       - name: Create Release
         id: create_crate_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
@@ -183,7 +188,7 @@ jobs:
         with:
           tag_name: ${{ matrix.package.name }}-v${{ env.PACKAGE_VERSION }}
           release_name: "Release ${{ matrix.package.name }} v${{ env.PACKAGE_VERSION }} [crates.io]"
-          body: printf '%b\n' "$(cat notes.md)"
+          body: ${{ env.RELEASE_BODY }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
