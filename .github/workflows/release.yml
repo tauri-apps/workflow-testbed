@@ -84,7 +84,9 @@ jobs:
           echo "This is current latest:" $PUBLISHED_VERSION
           echo "post pack dir:"
           ls
-      - run: npm audit | tee -a notes.md
+      - name: npm audit
+        working-directory: ${{ matrix.package.path }}
+        run: npm audit | tee -a notes.md
       - name: Publish ${{ matrix.package.name }}
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
@@ -166,7 +168,8 @@ jobs:
           echo "post package dir:"
           cd ${{ matrix.publishPath }}
           ls
-      - name: cargo audit | tee -a notes.md
+      - name: cargo audit
+        working-directory: ${{ matrix.package.path }}
         run: |
           cargo install cargo-audit
           cargo audit | tee -a notes.md
