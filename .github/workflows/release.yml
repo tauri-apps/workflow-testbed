@@ -46,7 +46,7 @@ jobs:
       - run: git fetch origin master
       - run: git checkout master
       - run: git pull
-      - run: git merge ${{ github.sha }} --no-ff -s recursive -X theirs
+      - run: git read-tree -u --reset ${{ github.sha }}
       - run: git commit -s -m "${{ github.event.head_commit.message }}"
       - run: git push
 
