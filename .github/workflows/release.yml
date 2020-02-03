@@ -195,7 +195,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_crate_release.outputs.upload_url }} 
-          asset_path: ./${{ matrix.package.path }}${{ matrix.package.publishPath }}/${{ matrix.package.registryName }}-${{ env.PACKAGE_VERSION }}.crate
+          asset_path: ./${{ matrix.package.publishPath }}/${{ matrix.package.registryName }}-${{ env.PACKAGE_VERSION }}.crate
           asset_name: ${{ matrix.package.registryName }}-${{ env.PACKAGE_VERSION }}.crate
           asset_content_type: application/x-gtar
       - name: Tangle Release
