@@ -45,6 +45,7 @@ jobs:
           git config --global user.email "${{ github.event.pusher.email }}"
       - run: git fetch origin master
       - run: git checkout master
+      - run: git pull
       - run: git merge --squash ${{ github.sha }} -s recursive -X theirs
       - run: git commit -s -m "${{ github.event.head_commit.message }}"
       - run: git push
