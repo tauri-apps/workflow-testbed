@@ -17,6 +17,7 @@ jobs:
         run: |
           git config --global user.name "${{ github.event.pusher.name }}"
           git config --global user.email "${{ github.event.pusher.email }}"
+      - run: git fetch dev
       - run: git read-tree -u --reset ${{ github.sha }}
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v2
