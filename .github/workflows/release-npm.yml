@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - '**/package.json`
+      - '**/package.json'
 
 jobs:
   publish:
