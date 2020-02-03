@@ -86,13 +86,13 @@ jobs:
           ls
       - name: npm audit
         working-directory: ${{ matrix.package.path }}
-        run: npm audit | tee -a notes.md
+        run: npm audit 2>&1 | tee -a notes.md
       - name: Publish ${{ matrix.package.name }}
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --dry-run | tee -a notes.md
+        run: npm publish --dry-run 2>&1 | tee -a notes.md
       - run: echo ::set-env name=RELEASE_BODY::$(printf '%b\n' "$(cat ${{ matrix.package.path }}/notes.md)")
       - name: Create Release
         id: create_npm_release
@@ -108,17 +108,6 @@ jobs:
             ${{ env.RELEASE_BODY }}
           draft: false
           prerelease: false
-      - name: Upload Notes
-        id: upload-release-asset-notes
-        if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_npm_release.outputs.upload_url }} 
-          asset_path: ./${{ matrix.package.path }}/notes.md
-          asset_name: notes.md
-          asset_content_type: text/markdown
       - name: Upload Release Asset
         id: upload-release-asset
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
@@ -186,12 +175,12 @@ jobs:
         working-directory: ${{ matrix.package.path }}
         run: |
           cargo install cargo-audit
-          cargo audit | tee -a notes.md
+          cargo audit 2>&1 | tee -a notes.md
       - name: Publish ${{ matrix.package.name }}
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
-        run: cargo publish --dry-run | tee -a notes.md
-      - run: echo ::set-env name=RELEASE_BODY::$(printf '%b\n' "$(cat notes.md)")
+        run: cargo publish --dry-run 2>&1 | tee -a notes.md
+      - run: echo ::set-env name=RELEASE_BODY::$(printf '%b\n' "$(cat ${{ matrix.package.path }}/notes.md)")
       - name: Create Release
         id: create_crate_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
