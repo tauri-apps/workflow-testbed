@@ -103,7 +103,9 @@ jobs:
         with:
           tag_name: ${{ matrix.package.name }}-v${{ env.PACKAGE_VERSION }}
           release_name: "Release ${{ matrix.package.name }} v${{ env.PACKAGE_VERSION }} [npmjs.com]"
-          body: "$RELEASE_BODY"
+          body: |
+            # Release Notes:
+            ${{ env.RELEASE_BODY }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
@@ -188,7 +190,9 @@ jobs:
         with:
           tag_name: ${{ matrix.package.name }}-v${{ env.PACKAGE_VERSION }}
           release_name: "Release ${{ matrix.package.name }} v${{ env.PACKAGE_VERSION }} [crates.io]"
-          body: "$RELEASE_BODY"
+          body: |
+            # Release Notes:
+            ${{ env.RELEASE_BODY }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
