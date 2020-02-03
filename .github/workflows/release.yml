@@ -155,7 +155,7 @@ jobs:
           sudo apt-get install -y webkit2gtk-4.0
       - name: get version
         working-directory: ${{ matrix.package.path }}
-        run: echo ::set-env name=PACKAGE_VERSION::$(sed -nE 's/^\s*version = "(.*?)"/\1/p' cargo.toml)
+        run: echo ::set-env name=PACKAGE_VERSION::$(sed -nE 's/^\s*version = "(.*?)"/\1/p' Cargo.toml)
       - name: cargo package
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
