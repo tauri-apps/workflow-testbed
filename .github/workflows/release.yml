@@ -93,6 +93,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --dry-run | tee -a notes.md
+      - run: echo ::set-env name=RELEASE_BODY::$(printf '%b\n' "$(cat notes.md)")
       - name: Create Release
         id: create_npm_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
@@ -102,7 +103,7 @@ jobs:
         with:
           tag_name: ${{ matrix.package.name }}-v${{ env.PACKAGE_VERSION }}
           release_name: "Release ${{ matrix.package.name }} v${{ env.PACKAGE_VERSION }} [npmjs.com]"
-          body: printf '%b\n' "$(cat notes.md)"
+          body: ${{ env.RELEASE_BODY }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
@@ -177,6 +178,7 @@ jobs:
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         run: cargo publish --dry-run | tee -a notes.md
+      - run: echo ::set-env name=RELEASE_BODY::$(printf '%b\n' "$(cat notes.md)")
       - name: Create Release
         id: create_crate_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
@@ -186,7 +188,7 @@ jobs:
         with:
           tag_name: ${{ matrix.package.name }}-v${{ env.PACKAGE_VERSION }}
           release_name: "Release ${{ matrix.package.name }} v${{ env.PACKAGE_VERSION }} [crates.io]"
-          body: printf '%b\n' "$(cat notes.md)"
+          body: ${{ env.RELEASE_BODY }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
