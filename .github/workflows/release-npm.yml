@@ -51,19 +51,16 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --dry-run 2>&1 | tee -a notes.md
-      - run: echo ::set-env name=RELEASE_BODY::$(printf '%b\n' "$(cat ${{ matrix.package.path }}/notes.md)")
       - name: Create Release
         id: create_npm_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
-        uses: jbolda/create-release@master
+        uses: jbolda/create-release@body-markdown
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ matrix.package.name }}-v${{ env.PACKAGE_VERSION }}
           release_name: "Release ${{ matrix.package.name }} v${{ env.PACKAGE_VERSION }} [npmjs.com]"
-          body: |
-            # Release Notes:
-            ${{ env.RELEASE_BODY }}
+          body: ./${{ matrix.package.path }}/notes.md
           draft: false
           prerelease: false
       - name: Upload Release Asset
