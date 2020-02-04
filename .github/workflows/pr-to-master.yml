@@ -24,3 +24,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: ${{ github.event.head_commit.message }}
+          title: Publish
