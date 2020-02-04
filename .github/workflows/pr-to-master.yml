@@ -24,4 +24,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: ${{ github.event.head_commit.message }}
+          branch: release/master
+          branch-suffix: short-commit-hash
           title: Publish
+          body: |
+            Merging this PR will squash and push all changes to the master branch.
+            It will kick off the process to release and publish any packages with an incremented version number.
