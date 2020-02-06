@@ -6,7 +6,6 @@ on:
       - master
     paths:
       - '**/Cargo.toml'
-      - '.github/workflows/**.yml'
 
 jobs:
   publish:
@@ -51,15 +50,18 @@ jobs:
         working-directory: ${{ matrix.package.path }}
         run: |
           cargo install cargo-audit
+          echo "# Cargo Audit\n" | tee -a nodes.md
           cargo audit 2>&1 | tee -a notes.md
       - name: Publish ${{ matrix.package.name }}
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
-        run: cargo publish --dry-run 2>&1 | tee -a notes.md
+        run: |
+          echo "# Cargo Publish\n" | tee -a nodes.md
+          cargo publish --dry-run 2>&1 | tee -a notes.md
       - name: Create Release
         id: create_crate_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
-        uses: jbolda/create-release@body-markdown
+        uses: jbolda/create-release@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

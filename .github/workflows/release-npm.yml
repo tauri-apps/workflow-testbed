@@ -6,7 +6,6 @@ on:
       - master
     paths:
       - '**/package.json'
-      - '.github/workflows/**.yml'
 
 jobs:
   publish:
@@ -58,7 +57,7 @@ jobs:
       - name: Create Release
         id: create_npm_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
-        uses: jbolda/create-release@body-markdown
+        uses: jbolda/create-release@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
