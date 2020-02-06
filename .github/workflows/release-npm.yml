@@ -44,13 +44,17 @@ jobs:
           ls
       - name: npm audit
         working-directory: ${{ matrix.package.path }}
-        run: npm audit 2>&1 | tee -a notes.md
+        run: |
+          echo "# NPM Audit Results:\n" | tee -a notes.md
+          npm audit 2>&1 | tee -a notes.md
       - name: Publish ${{ matrix.package.name }}
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --dry-run 2>&1 | tee -a notes.md
+        run: |
+          echo "# NPM Package Publish:\n" | tee -a notes.md
+          npm publish --dry-run 2>&1 | tee -a notes.md
       - name: Create Release
         id: create_npm_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
