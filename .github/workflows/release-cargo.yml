@@ -34,6 +34,8 @@ jobs:
       - name: get version
         working-directory: ${{ matrix.package.path }}
         run: echo ::set-env name=PACKAGE_VERSION::$(sed -nE 's/^\s*version = "(.*?)"/\1/p' Cargo.toml)
+      - name: check published version
+        run: echo ::set-env name=PUBLISHED_VERSION::$(cargo search ${{ matrix.package.registryName }} -- limit 1 | sed -nE 's/^[^"]*"//; s/".*//1p' -)
       - name: cargo package
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
@@ -50,13 +52,13 @@ jobs:
         working-directory: ${{ matrix.package.path }}
         run: |
           cargo install cargo-audit
-          echo "# Cargo Audit\n" | tee -a ${{runner.workspace }}/notes.md
+          echo "# Cargo Audit" | tee -a ${{runner.workspace }}/notes.md
           cargo audit 2>&1 | tee -a ${{runner.workspace }}/notes.md
       - name: Publish ${{ matrix.package.name }}
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         run: |
-          echo "# Cargo Publish\n" | tee -a ${{runner.workspace }}/notes.md
+          echo "# Cargo Publish" | tee -a ${{runner.workspace }}/notes.md
           cargo publish --dry-run 2>&1 | tee -a ${{runner.workspace }}/notes.md
       - name: Create Release
         id: create_crate_release
