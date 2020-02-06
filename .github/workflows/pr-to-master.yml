@@ -8,7 +8,7 @@ on:
 jobs:
   pr-to-master:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'Publish')
+    if: contains(github.event.head_commit.message, 'version updates')
     steps:
       - uses: actions/checkout@v2
         with:
