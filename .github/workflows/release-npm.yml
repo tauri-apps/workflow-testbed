@@ -44,16 +44,16 @@ jobs:
       - name: npm audit
         working-directory: ${{ matrix.package.path }}
         run: |
-          echo "# NPM Audit Results:\n" | tee -a notes.md
-          npm audit 2>&1 | tee -a notes.md
+          echo "# NPM Audit Results:\n" | tee -a ${{runner.workspace }}/notes.md
+          npm audit 2>&1 | tee -a ${{runner.workspace }}/notes.md
       - name: Publish ${{ matrix.package.name }}
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
         working-directory: ${{ matrix.package.path }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          echo "# NPM Package Publish:\n" | tee -a notes.md
-          npm publish --dry-run 2>&1 | tee -a notes.md
+          echo "# NPM Package Publish:\n" | tee -a ${{runner.workspace }}/notes.md
+          npm publish --dry-run 2>&1 | tee -a ${{runner.workspace }}/notes.md
       - name: Create Release
         id: create_npm_release
         if: env.PACKAGE_VERSION != env.PUBLISHED_VERSION
@@ -63,7 +63,7 @@ jobs:
         with:
           tag_name: ${{ matrix.package.name }}-v${{ env.PACKAGE_VERSION }}
           release_name: "Release ${{ matrix.package.name }} v${{ env.PACKAGE_VERSION }} [npmjs.com]"
-          body: ./${{ matrix.package.path }}/notes.md
+          bodyFromFile: ./notes.md
           draft: false
           prerelease: false
       - name: Upload Release Asset
