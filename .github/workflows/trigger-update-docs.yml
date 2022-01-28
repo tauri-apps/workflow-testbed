@@ -14,6 +14,6 @@ jobs:
       - name: Repository Dispatch to tauri-docs
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.ORG_TAURI_BOT }}
+          token: ${{ secrets.TAURI_BOT_PAT }}
           repository: tauri-docs
           event-type: test-update-docs
